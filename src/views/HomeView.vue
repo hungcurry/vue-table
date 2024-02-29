@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router';
 const url = 'https://randomuser.me/api/'
 const result = ref([])
 const isError = ref(false)
-const isApp = ref(false)
+const isWeb = ref(false)
 const device = ref('')
 const message = ref('')
 const route = useRoute()
@@ -172,10 +172,10 @@ const handlecheckOpen =() => {
   const isInAppWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(navigator.userAgent)
   if (isMobile && isInAppWebView) {
     device.value = 'Open in an app'
-    isApp.value = true
+    isWeb.value = false
   } else {
     device.value = 'Open in a web browser'
-    isApp.value = false
+    isWeb.value = true
   }
 }
 const headeGetData = () => {
