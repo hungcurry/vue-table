@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref , watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router';
 
@@ -11,18 +11,6 @@ const isError = ref(false)
 const device = ref('')
 const message = ref('')
 const route = useRoute()
-const fullPath = ref('')
-
-watch(
-  () => route.fullPath, (newV , oldV) => {
-    console.log(`newV`, newV);
-    console.log(`oldV`, oldV);
-    fullPath.value = newV.slice(1);
-    console.log('fullPath' , fullPath.value);
-    headeGetData()
-  },
-);
-
 const data = ref([
   {
     price_components:[
@@ -188,8 +176,9 @@ const handlecheckOpen =() => {
   }
 }
 const headeGetData = () => {
-  console.log(`url`, url + fullPath.value)
-  axios.get(url + fullPath.value)
+  console.log('route' ,route.fullPath);
+  console.log(`url`, url + route.fullPath.slice(1))
+  axios.get(url + route.fullPath.slice(1))
   .then((res) => {
     result.value = res?.data?.results
   })
@@ -200,6 +189,7 @@ const headeGetData = () => {
 }
 onMounted(() => {
   handlecheckOpen()
+  headeGetData()
 })
 </script>
 
