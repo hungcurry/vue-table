@@ -4,10 +4,11 @@ import axios from 'axios'
 import { useRoute } from 'vue-router';
 
 // const url = 'https://hungcurry.github.io/vue-table/'
-const url = 'https://randomuser.me/api/'
 // const url = 'https://vue-lessons-api.vercel.app/courses/error'
+const url = 'https://randomuser.me/api/'
 const result = ref([])
 const isError = ref(false)
+const isApp = ref(false)
 const device = ref('')
 const message = ref('')
 const route = useRoute()
@@ -171,8 +172,10 @@ const handlecheckOpen =() => {
   const isInAppWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(navigator.userAgent)
   if (isMobile && isInAppWebView) {
     device.value = 'Open in an app'
+    isApp.value = true
   } else {
     device.value = 'Open in a web browser'
+    isApp.value = false
   }
 }
 const headeGetData = () => {
@@ -196,7 +199,7 @@ onMounted(() => {
 <template>
   <header class="header flex-center">
     <h1 class="flex-center"><img src="../assets/images/first_msilogo.png" alt="MSILOGO"></h1>
-    <button class="close primary" @click="handleCloseWindow">Close</button>
+    <button v-if="isApp" class="close primary" @click="handleCloseWindow">Close</button>
   </header>
   <div class="container">
     <h1>Test</h1>
