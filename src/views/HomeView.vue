@@ -199,7 +199,8 @@ onMounted(() => {
 <template>
   <header class="header flex-center">
     <h1 class="flex-center"><img src="../assets/images/first_msilogo.png" alt="MSILOGO"></h1>
-    <button v-if="isApp" class="close primary" @click="handleCloseWindow">Close</button>
+    <button v-if="isWeb" class="close primary" @click="handleCloseWindow">Button</button>
+    <button class="close2 secondary" @click="handleCloseWindow">Close</button>
   </header>
   <div class="container">
     <h1>Test</h1>
@@ -239,7 +240,7 @@ onMounted(() => {
           <tr v-for="(rates , idx) in data" :key="idx">
             <td scope="row">{{ idx + 1 }}</td>
             <td class="price-components">
-              <div class="rates-row secondary" v-for="(item , idx) in rates.price_components" :key="idx">
+              <div class="rates-row card-shadow" v-for="(item , idx) in rates.price_components" :key="idx">
                 <div class="flex mb-1">
                   <p class="w-70 min-245" scope='col'>type : <span>{{ item.type }}</span></p>
                   <p class="w-30 ml-2" scope='col'>price : <span>{{ item.price }}</span></p>
@@ -251,7 +252,7 @@ onMounted(() => {
               </div>
             </td>
             <td class="restrictions">
-              <div class="rates-row secondary">
+              <div class="rates-row card-shadow">
                 <div class="flex mb-1">
                   <p class="w-50" scope='col'>start_time : <span>{{ rates.restrictions?.start_time }}</span></p>
                   <p class="w-50 ml-2" scope='col'>end_time : <span>{{ rates.restrictions?.end_time }}</span></p>
@@ -341,18 +342,28 @@ h1,h2,h3,h4,h5,h6 {
 }
 .close {
   position: absolute;
-  right: 30px;
+  left: 30px;
   top: 15px;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background-color: var(--primary);
   color: var(--white);
   font-size: 16px;
   cursor: pointer;
   &:hover {
     background-color: var(--secondary);
   }
+}
+.close2 {
+  position: absolute;
+  right: 30px;
+  top: 15px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  color: var(--white);
+  font-size: 16px;
+  cursor: pointer;
 }
 .rates-row {
   padding: 2px 4px;
@@ -414,7 +425,14 @@ h1,h2,h3,h4,h5,h6 {
     z-index:2;
   }
 }
+.primary {
+  background-color: var(--primary);
+}
 .secondary {
+  background-color: var(--secondary);
+}
+
+.card-shadow {
   box-shadow: 1px 2px 4px #403f3f;
   border-bottom: 4px solid var(--secondary);
 }
