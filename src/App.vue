@@ -3,7 +3,8 @@ import { onMounted, ref , watch } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router';
 
-const url = 'https://randomuser.me/api/'
+const url = 'https://hungcurry.github.io/vue-table/'
+// const url = 'https://randomuser.me/api/'
 // const url = 'https://vue-lessons-api.vercel.app/courses/error'
 const result = ref([])
 const isError = ref(false)
