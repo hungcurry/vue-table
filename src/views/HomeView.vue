@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router';
 const url = 'https://randomuser.me/api/'
 const result = ref([])
 const isError = ref(false)
+const isLoad = ref(false)
 const isWeb = ref(false)
 const device = ref('')
 const message = ref('')
@@ -179,15 +180,18 @@ const handlecheckOpen =() => {
   }
 }
 const headeGetData = () => {
+  isLoad.value = false
   console.log('route' ,route.fullPath);
   console.log(`url`, url + route.fullPath.slice(1))
   axios.get(url + route.fullPath.slice(1))
   .then((res) => {
     result.value = res?.data?.results
+    isLoad.value = true
   })
   .catch((error) => {
     isError.value = true
     message.value = error?.response?.data
+    isLoad.value = true
   })
 }
 onMounted(() => {
@@ -205,6 +209,12 @@ onMounted(() => {
   <div class="container">
     <h1>Test</h1>
     <p>{{ device }}</p>
+
+    <div class="loadingBox" v-show="!isLoad">
+      <div class="loading">
+        <div></div>
+      </div>
+    </div>
 
     <template v-if="!isError">
       <template v-if="result?.length === 0">
@@ -431,7 +441,6 @@ h1,h2,h3,h4,h5,h6 {
 .secondary {
   background-color: var(--secondary);
 }
-
 .card-shadow {
   box-shadow: 1px 2px 4px #403f3f;
   border-bottom: 4px solid var(--secondary);
@@ -466,7 +475,44 @@ h1,h2,h3,h4,h5,h6 {
 .ml-2{
   margin-left: 8px;
 }
-
+.loadingBox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  overflow: hidden;
+  background: transparent;
+  transform: scale(0.3);
+}
+.loading div {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 20px solid var(--primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  box-sizing: content-box;
+  animation: loading 0.6s linear infinite;
+  top: 100px;
+  left: 100px
+}
+.loading {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0; 
+}
+@keyframes loading {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
 
 
 
