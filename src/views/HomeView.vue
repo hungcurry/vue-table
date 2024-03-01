@@ -180,18 +180,18 @@ const handlecheckOpen =() => {
   }
 }
 const headeGetData = () => {
-  isLoad.value = false
+  isLoad.value = true
   console.log('route' ,route.fullPath);
   console.log(`url`, url + route.fullPath.slice(1))
   axios.get(url + route.fullPath.slice(1))
   .then((res) => {
     result.value = res?.data?.results
-    isLoad.value = true
+    isLoad.value = false
   })
   .catch((error) => {
     isError.value = true
     message.value = error?.response?.data
-    isLoad.value = true
+    isLoad.value = false
   })
 }
 onMounted(() => {
@@ -209,13 +209,11 @@ onMounted(() => {
   <div class="container">
     <h1>Test</h1>
     <p>{{ device }}</p>
-
-    <div class="loadingBox" v-show="!isLoad">
+    <div class="loadingBox" v-show="isLoad">
       <div class="loading">
         <div></div>
       </div>
     </div>
-
     <template v-if="!isError">
       <template v-if="result?.length === 0">
         <p>查無資料</p>
@@ -228,11 +226,9 @@ onMounted(() => {
         </ul>
       </template>
     </template>
-
     <template v-else>
       <p>{{ message }}</p>
     </template>
-
   </div>
 
   <!-- <div class="container mt-4">
