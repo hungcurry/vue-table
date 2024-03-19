@@ -362,7 +362,7 @@ onMounted( async () => {
 
     <div class="container color">
       <h2 class="rates-title">
-        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試02 {{ device }}</span></p>
+        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試03 {{ device }}</span></p>
         <p v-if="minPrice">{{ t('minimum_payment_amount') }}$ <span class="text-md">{{ minPrice }}</span> ({{ currency  }})</p>
       </h2>
 
@@ -535,7 +535,7 @@ p {
 .wrapper {
   overflow: hidden;
   background-color: #2E343A;
-  height: 100vh;
+  height: 100dvh;
    * {
     box-sizing: border-box;
   }
@@ -551,7 +551,7 @@ p {
   &.color {
     color: var(--white);
     background-color: #2E343A;
-    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
   }
   .rates-title {
     caption-side: top;
@@ -589,14 +589,14 @@ p {
 .outer {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100vh - 155px);
+  height: calc(100dvh - 155px);
   padding-top: 45px;
   // position: fixed;
   // width: calc(100% - 3px);
   // top: 129px;
   // left: 0;
   &.fixHeight {
-    height: calc(100vh - 127px) !important;
+    height: calc(100dvh - 127px) !important;
     top: 100px !important;
   }
   &::-webkit-scrollbar {
