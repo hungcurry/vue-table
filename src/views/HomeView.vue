@@ -96,12 +96,12 @@ const data = ref([
         type: "ENERGY",
         vat:50000,
       },
-      {
-        price: 60,
-        step_size: 180,
-        type: "PARKING_TIME",
-        vat:4,
-      },
+      // {
+      //   price: 60,
+      //   step_size: 180,
+      //   type: "PARKING_TIME",
+      //   vat:4,
+      // },
     ],
     restrictions:{
       day_of_week: ['MONDAY', 'TUESDAY', 'WEDNESDAY'],
@@ -123,12 +123,12 @@ const data = ref([
         type: "ENERGY",
         vat:5,
       },
-      {
-        price: 100,
-        step_size: 120,
-        type: "PARKING_TIME",
-        vat:5,
-      },
+      //{
+        // price: 100,
+        // step_size: 120,
+        // type: "PARKING_TIME",
+        // vat:5,
+      //},
     ],
     restrictions:{
       end_time: "00:00",
@@ -141,103 +141,103 @@ const data = ref([
     }
   },
   // --------
-  {
-    price_components:[
-      {
-        price: 90000,
-        step_size: 60000,
-        type: "ENERGY",
-        vat:50000,
-      },
-      {
-        price: 60,
-        step_size: 180,
-        type: "PARKING_TIME",
-        vat:4,
-      },
-    ],
-    restrictions:{
-      day_of_week: ['MONDAY', 'TUESDAY', 'WEDNESDAY'],
-      end_time: "11:00",
-      max_current: 80,
-      max_duration: 14400,
-      max_parking_duration: 14400,
-      min_current: 30,
-      min_duration: 180,
-      min_parking_duration: 600,
-      start_time: "00:00"
-    }
-  },
-  {
-    price_components:[
-      {
-        price: 500,
-        step_size: 15,
-        type: "ENERGY",
-        vat:5,
-      },
-      {
-        price: 100,
-        step_size: 120,
-        type: "PARKING_TIME",
-        vat:5,
-      },
-    ],
-    restrictions:{
-      end_time: "00:00",
-      max_current: 80,
-      max_duration: 21600,
-      max_parking_duration: 21600,
-      min_current: 20,
-      min_parking_duration: 180,
-      start_time: "11:00"
-    }
-  },
-  // --------
-  {
-  price_components:[
-    {
-      price: 90000,
-      step_size: 60000,
-      type: "ENERGY",
-      vat:50000,
-    },
-    {
-      price: 60,
-      step_size: 180,
-      type: "PARKING_TIME",
-      vat:4,
-    },
-  ],
-  restrictions:{
-    day_of_week: ['MONDAY', 'TUESDAY', 'WEDNESDAY'],
-    end_time: "11:00",
-    max_current: 80,
-    max_duration: 14400,
-    max_parking_duration: 14400,
-    min_current: 30,
-    min_duration: 180,
-    min_parking_duration: 600,
-    start_time: "00:00"
-  }
-  },
-  {
-    price_components:[
-      {
-        price: 500,
-        step_size: 15,
-        type: "ENERGY",
-        vat:5,
-      },
-      {
-        price: 100,
-        step_size: 120,
-        type: "PARKING_TIME",
-        vat:5,
-      },
-    ],
-    restrictions:{}
-  },
+  // {
+  //   price_components:[
+  //     {
+  //       price: 90000,
+  //       step_size: 60000,
+  //       type: "ENERGY",
+  //       vat:50000,
+  //     },
+  //     {
+  //       price: 60,
+  //       step_size: 180,
+  //       type: "PARKING_TIME",
+  //       vat:4,
+  //     },
+  //   ],
+  //   restrictions:{
+  //     day_of_week: ['MONDAY', 'TUESDAY', 'WEDNESDAY'],
+  //     end_time: "11:00",
+  //     max_current: 80,
+  //     max_duration: 14400,
+  //     max_parking_duration: 14400,
+  //     min_current: 30,
+  //     min_duration: 180,
+  //     min_parking_duration: 600,
+  //     start_time: "00:00"
+  //   }
+  // },
+  // {
+  //   price_components:[
+  //     {
+  //       price: 500,
+  //       step_size: 15,
+  //       type: "ENERGY",
+  //       vat:5,
+  //     },
+  //     {
+  //       price: 100,
+  //       step_size: 120,
+  //       type: "PARKING_TIME",
+  //       vat:5,
+  //     },
+  //   ],
+  //   restrictions:{
+  //     end_time: "00:00",
+  //     max_current: 80,
+  //     max_duration: 21600,
+  //     max_parking_duration: 21600,
+  //     min_current: 20,
+  //     min_parking_duration: 180,
+  //     start_time: "11:00"
+  //   }
+  // },
+  // // --------
+  // {
+  // price_components:[
+  //   {
+  //     price: 90000,
+  //     step_size: 60000,
+  //     type: "ENERGY",
+  //     vat:50000,
+  //   },
+  //   {
+  //     price: 60,
+  //     step_size: 180,
+  //     type: "PARKING_TIME",
+  //     vat:4,
+  //   },
+  // ],
+  // restrictions:{
+  //   day_of_week: ['MONDAY', 'TUESDAY', 'WEDNESDAY'],
+  //   end_time: "11:00",
+  //   max_current: 80,
+  //   max_duration: 14400,
+  //   max_parking_duration: 14400,
+  //   min_current: 30,
+  //   min_duration: 180,
+  //   min_parking_duration: 600,
+  //   start_time: "00:00"
+  // }
+  // },
+  // {
+  //   price_components:[
+  //     {
+  //       price: 500,
+  //       step_size: 15,
+  //       type: "ENERGY",
+  //       vat:5,
+  //     },
+  //     {
+  //       price: 100,
+  //       step_size: 120,
+  //       type: "PARKING_TIME",
+  //       vat:5,
+  //     },
+  //   ],
+  //   restrictions:{}
+  // },
 ])
 
 const handleCollapse = (id) => {
@@ -362,7 +362,7 @@ onMounted( async () => {
 
     <div class="container color">
       <h2 class="rates-title">
-        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試01 {{ device }}</span></p>
+        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試02 {{ device }}</span></p>
         <p v-if="minPrice">{{ t('minimum_payment_amount') }}$ <span class="text-md">{{ minPrice }}</span> ({{ currency  }})</p>
       </h2>
 
@@ -535,7 +535,7 @@ p {
 .wrapper {
   overflow: hidden;
   background-color: #2E343A;
-  height: 100dvh;
+  height: 100vh;
    * {
     box-sizing: border-box;
   }
@@ -551,7 +551,7 @@ p {
   &.color {
     color: var(--white);
     background-color: #2E343A;
-    height: calc(100dvh - 60px);
+    height: calc(100vh - 60px);
   }
   .rates-title {
     caption-side: top;
@@ -589,14 +589,14 @@ p {
 .outer {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100dvh - 142px);
+  height: calc(100vh - 155px);
   padding-top: 45px;
-  position: fixed;
-  width: calc(100% - 3px);
-  top: 129px;
-  left: 0;
+  // position: fixed;
+  // width: calc(100% - 3px);
+  // top: 129px;
+  // left: 0;
   &.fixHeight {
-    height: calc(100dvh - 110px) !important;
+    height: calc(100vh - 127px) !important;
     top: 100px !important;
   }
   &::-webkit-scrollbar {
