@@ -115,31 +115,31 @@ const data = ref([
       start_time: "00:00"
     }
   },
-  {
-    price_components:[
-      {
-        price: 500,
-        step_size: 15,
-        type: "ENERGY",
-        vat:5,
-      },
-      //{
-        // price: 100,
-        // step_size: 120,
-        // type: "PARKING_TIME",
-        // vat:5,
-      //},
-    ],
-    restrictions:{
-      end_time: "00:00",
-      max_current: 80,
-      max_duration: 21600,
-      max_parking_duration: 21600,
-      min_current: 20,
-      min_parking_duration: 180,
-      start_time: "11:00"
-    }
-  },
+  // {
+  //   price_components:[
+  //     {
+  //       price: 500,
+  //       step_size: 15,
+  //       type: "ENERGY",
+  //       vat:5,
+  //     },
+  //     //{
+  //       // price: 100,
+  //       // step_size: 120,
+  //       // type: "PARKING_TIME",
+  //       // vat:5,
+  //     //},
+  //   ],
+  //   restrictions:{
+  //     end_time: "00:00",
+  //     max_current: 80,
+  //     max_duration: 21600,
+  //     max_parking_duration: 21600,
+  //     min_current: 20,
+  //     min_parking_duration: 180,
+  //     start_time: "11:00"
+  //   }
+  // },
   // --------
   // {
   //   price_components:[
@@ -362,7 +362,7 @@ onMounted( async () => {
 
     <div class="container color">
       <h2 class="rates-title">
-        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試03 {{ device }}</span></p>
+        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試04 {{ device }}</span></p>
         <p v-if="minPrice">{{ t('minimum_payment_amount') }}$ <span class="text-md">{{ minPrice }}</span> ({{ currency  }})</p>
       </h2>
 
