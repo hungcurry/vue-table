@@ -99,6 +99,8 @@ export default
   price : "價格",
   unit: "單位",
   vat: "稅率",
+  excl_vat: '未稅',
+  incl_vat: '含稅',
   ENERGY: "依 電費計價",
   TIME: "依 時間計價",
   PARKING_TIME: "依 停車計價",
@@ -114,6 +116,4 @@ export default
   min_parking_duration: "最短停車時間",
   max_parking_duration: "最長停車時間",
   aplied_day_of_week: "一星期中應用的天數",
-
-
 }

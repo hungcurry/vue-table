@@ -19,11 +19,26 @@ const minPrice = ref(10)
 const url = '/cp/tariff?evse_id='
 const isCollapse = ref([])
 const guestInfo = reactive({})
-const weeks = computed(() => {
+const ratesData = computed(() => {
   if(result.value === undefined) return
-  let copyData = ref(JSON.parse(JSON.stringify(data.value)))
+  let copyData = JSON.parse(JSON.stringify(result.value))
+  let priceAry = []
   let weekAry = []
-  copyData.value.forEach( (rates ) => {
+  copyData.forEach( (rates ) => {
+    // price
+    priceAry = JSON.parse(JSON.stringify(rates?.price_components))
+    priceAry.forEach( (price) => {
+      let exclPrice = price?.price
+      let vat = price?.vat ? price?.vat : 0
+      let inclPrice = Number(exclPrice) + (Number(exclPrice) * Number(vat) / 100)
+      price['inclPrice'] = inclPrice
+
+      let unit = price?.type === 'ENERGY' ? Number(price?.step_size) : Number(price?.step_size) / 60
+      price['unit'] = unit
+    })
+    rates['showPriceComponents'] = priceAry
+  })
+  copyData.forEach( (rates ) => {
     // week
     let weekTypeState = [
       { str: 'Mon', state: false },
@@ -39,7 +54,7 @@ const weeks = computed(() => {
       rates['showWeek'] = weekTypeState
       return
     }
-    let data = rates?.restrictions?.day_of_week;
+    let data = rates?.restrictions?.day_of_week
     weekAry = data.map(day => day.charAt(0) + day.slice(1).toLowerCase()).map(day => day.slice(0, 3))
 
     weekAry.forEach( (week) => {
@@ -49,19 +64,19 @@ const weeks = computed(() => {
     })
     rates['showWeek'] = weekTypeState
   })
-  copyData.value.forEach((rates) => {
+  copyData.forEach((rates) => {
     // time
     const startTime = rates?.restrictions?.start_time ? rates.restrictions.start_time : '00:00'
     const endTime = rates?.restrictions?.end_time ? rates.restrictions.end_time : '23:59'
     // duration
-    const minDuration = rates?.restrictions?.min_duration ? Number(rates.restrictions.min_duration) / 60 : '--'
-    const maxDuration = rates?.restrictions?.max_duration ? Number(rates.restrictions.max_duration) / 60 : '--'
+    const minDuration = rates?.restrictions?.min_duration ? Number(rates.restrictions.min_duration) / 60 : false
+    const maxDuration = rates?.restrictions?.max_duration ? Number(rates.restrictions.max_duration) / 60 : false
     // current
-    const minCurrent = rates?.restrictions?.min_current ? Number(rates.restrictions.min_current)  : '--'
-    const maxCurrent = rates?.restrictions?.max_current ? Number(rates.restrictions.max_current)  : '--'
+    const minCurrent = rates?.restrictions?.min_current ? Number(rates.restrictions.min_current)  : false
+    const maxCurrent = rates?.restrictions?.max_current ? Number(rates.restrictions.max_current)  : false
     // parking
-    const minParkingDuration = rates?.restrictions?.min_parking_duration ? Number(rates.restrictions.min_parking_duration) / 60 : '--'
-    const maxParkingDuration = rates?.restrictions?.max_parking_duration ? Number(rates.restrictions.max_parking_duration) / 60 : '--'
+    const minParkingDuration = rates?.restrictions?.min_parking_duration ? Number(rates.restrictions.min_parking_duration) / 60 : false
+    const maxParkingDuration = rates?.restrictions?.max_parking_duration ? Number(rates.restrictions.max_parking_duration) / 60 : false
 
     rates.showRestriction = {
       startTime,
@@ -74,8 +89,8 @@ const weeks = computed(() => {
       maxParkingDuration,
     }
   })
-  console.log(`computed-copyData` , copyData.value)
-  return copyData.value
+  console.log(`computed-copyData` , copyData)
+  return copyData
 })
 watchEffect(() => {
   if (result.value === undefined) return
@@ -86,7 +101,6 @@ watchEffect(() => {
   }
   isCollapse.value = ary
 })
-
 const data = ref([
   {
     price_components:[
@@ -241,27 +255,61 @@ const data = ref([
 ])
 
 const handleCollapse = (id) => {
-  isCollapse.value.forEach((item , index) => {
-    index === id - 1 ? item.state = !item.state : item.state = false
+  // ~week預設高度
+  let defaultHeight = 124
+  let Height = 0
+  const restrictions = ratesData.value[id - 1]?.showRestriction || {}
+  const showItemLength = Object.values(restrictions).filter(item => item !== false).length
+  Height = `${defaultHeight + showItemLength * 28}px`
+
+  console.log(`id`, id)
+  console.log('restrictions', restrictions)
+  console.log('showItemLength', showItemLength)
+  console.log('Height', Height)
+
+  const targetIndex = id - 1
+  const targetItem = isCollapse.value[targetIndex]
+
+  isCollapse.value.forEach((item, index) => {
+    // ~收和其他item
+    if (index === targetIndex) {
+      item.state = !targetItem.state
+      item.height = item.state ? Height : 0
+    } else {
+      item.state = false
+      item.height = 0
+    }
+
+    // if (index === targetIndex) {
+    //   item.state = !targetItem.state
+    //   item.height = item.state ? Height : 0
+    // } 
   })
 }
 const handleCloseWindow = () =>{
   window.open(location.href, "_self", "")
   window.close()
 }
-// const handleCheckOpen = () => {
-//   // Check opened mobile device
-//   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-//   // Check opened WebView
-//   const isInAppWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(navigator.userAgent)
-//   if (isMobile && isInAppWebView) {
-//     device.value = 'Open app'
-//     isWeb.value = false
-//   } else {
-//     device.value = 'Open browser'
-//     isWeb.value = true
-//   }
-// }
+const handleCheckOpen = () => {
+  console.log(`navigator` ,navigator.userAgent);
+  const isBrowserView = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+  const isdeviceView = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  const isAppView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(navigator.userAgent)
+
+  console.log(`isBrowserView`, isBrowserView);
+  console.log(`isdeviceView`, isdeviceView);
+  console.log(`isAppView`, isAppView);
+
+  if (isBrowserView || isdeviceView) {
+    device.value = 'browser'
+  }
+  if (isdeviceView) {
+    device.value = 'device'
+  }
+  if (isAppView) {
+    device.value = 'app'
+  }
+}
 // const handleGetToken = async() => {
 //   if(Object.keys(route.query).length === 0) return
 
@@ -298,7 +346,7 @@ const handleGetData = () => {
     console.log(`res`, res);
     if(res.status === 200 && res?.data?.tariff?.elements?.length > 0) {
       currency.value = res?.data?.tariff?.currency
-      minPrice.value = res?.data?.tariff?.min_price ? res?.data?.tariff?.min_price?.excl_vat : false
+      minPrice.value = res?.data?.tariff?.min_price ? res?.data?.tariff?.min_price?.incl_vat : false
       result.value = res?.data?.tariff?.elements
       isLoad.value = false;
     }
@@ -341,7 +389,7 @@ const handleGetData = () => {
 //   }
 // }
 onMounted( async () => {
-  // await handleCheckOpen()
+  await handleCheckOpen()
   // await handleGetToken()
   // await handleCheckToken()
   // await handleGetData()
@@ -354,14 +402,13 @@ onMounted( async () => {
     <header class="header flex-center">
       <div class="container w-100">
         <h1 class="flex-center" title="MSILOGO"><img src="../assets/first_msilogo.png" alt="MSILOGO"></h1>
-        <button v-if="isWeb" class="close2 bg-primary" @click="handleCloseWindow">isWeb</button>
-        <button class="close bg-secondary" @click="handleCloseWindow">{{ t('close') }}</button>
+        <button class="close" @click="handleCloseWindow">X</button>
       </div>
     </header>
 
     <div class="container color">
       <h2 class="rates-title">
-        <p class="text-md">{{ t('charging_rates') }}<span class="text-xs">-測試01 {{ device }}</span></p>
+        <p class="text-md">{{ t('charging_rates') }}-02-<span class="text-xs" style="color: yellow;"> {{ device }} </span></p>
         <p v-if="minPrice">{{ t('minimum_payment_amount') }}$ <span class="text-md">{{ minPrice }}</span> ({{ currency  }})</p>
       </h2>
 
@@ -378,31 +425,31 @@ onMounted( async () => {
         <template v-else>
           <div class="outer" :class="{ fixHeight : !minPrice }">
             <div class="cardGroup">
-              <div class="card" v-for="(rates , idx) in weeks" :key="idx" ref="collapseRef">
+              <div class="card" v-for="(rates , idx) in ratesData" :key="idx">
                 <div class="card-circle" title="Rate">{{ t('rates') }}{{ idx + 1}}</div>
                 <div class="card-header">
                   <h3 class="card-title text-black mb-2">{{ t('price_components') }}</h3>
-                  <div class="price-components mb-2" v-for="(item , idx) in rates?.price_components" :key="idx">
+                  <div class="price-components mb-2" v-for="(item , idx) in rates?.showPriceComponents" :key="idx">
                     <ol class="list">
                       <li class="flex">
-                        <span class="inline-block w-50 pr-2">{{ t('type') }} : </span>
-                        <span class="w-50 info">{{ t(item?.type) }}</span>
+                        <span class="inline-block w-35 md-w-50 pr-2">{{ t('type') }} : </span>
+                        <span class="w-65 md-w-50 info">{{ t(item?.type) }}</span>
                       </li>
                       <li class="flex">
-                        <span class="inline-block w-50 pr-2">{{ t('price') }} : </span>
-                        <span class="w-50 info">{{ item?.price }}
-                          <small class="tag">{{ currency  }}/{{ t('hr') }}</small>
+                        <span class="inline-block w-35 md-w-50 pr-2">{{ t('price') }} : </span>
+                        <span class="w-65 md-w-50 info">{{ item?.inclPrice }}
+                          <small class="tag">{{ currency  }}/{{ t('hr') }}({{ t('incl_vat') }})</small>
                         </span>
                       </li>
                       <li class="flex">
-                        <span class="inline-block w-50 pr-2">{{ t('unit') }} : </span>
-                        <span class="w-50 info">{{ item?.type === "ENERGY" ? item?.step_size : item?.step_size / 60 }}
+                        <span class="inline-block w-35 md-w-50 pr-2">{{ t('unit') }} : </span>
+                        <span class="w-65 md-w-50 info">{{ item?.unit }}
                           <small class="tag">/{{ t('min') }}</small>
                         </span>
                       </li>
-                      <li class="flex">
-                        <span class="inline-block w-50 pr-2">{{ t('vat') }} : </span>
-                        <span class="w-50 info">{{ item?.vat }}
+                      <li class="flex" v-if="false">
+                        <span class="inline-block w-35 md-w-50 pr-2">{{ t('vat') }} : </span>
+                        <span class="w-65 md-w-50 info">{{ item?.vat }}
                           <small class="tag">%</small>
                         </span>
                       </li>
@@ -413,64 +460,62 @@ onMounted( async () => {
                   <h3 class="card-title text-black mb-2">{{ t('restrictions') }}
                     <span class="collapse" @click='handleCollapse(idx + 1)' :id="idx + 1">+</span>
                   </h3>
-                  <Transition name="fade">
-                    <div class="restrictions" v-show="isCollapse[idx]?.state">
-                      <ol class="list">
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('start_time') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.startTime }}</span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('end_time') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.endTime }}</span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('min_duration') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.minDuration }}
-                            <small class="tag">/{{ t('min') }}</small>
-                          </span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('max_duration') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.maxDuration }}
-                            <small class="tag">/{{ t('min') }}</small>
-                          </span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('min_current') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.minCurrent }}
-                            <small class="tag">A</small>
-                          </span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-50 pr-2">{{ t('max_current') }} : </span>
-                          <span class="w-50 info">{{ rates?.showRestriction?.maxCurrent }}
-                            <small class="tag">A</small>
-                          </span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-70 md-w-50 pr-2">{{ t('min_parking_duration') }} : </span>
-                          <span class="w-30 info">{{ rates?.showRestriction?.minParkingDuration }}
-                            <small class="tag">/{{ t('min') }}</small>
-                          </span>
-                        </li>
-                        <li class="flex">
-                          <span class="inline-block w-70 md-w-50 pr-2">{{ t('max_parking_duration') }} : </span>
-                          <span class="w-30 info">{{ rates?.showRestriction?.maxParkingDuration }}
-                            <small class="tag">/{{ t('min') }}</small>
-                          </span>
-                        </li>
-                        <li>
-                          <span class="block mb-2">{{ t('aplied_day_of_week') }} : </span>
-                          <ul class="weeksList flex flex-wrap">
-                            <li v-for="(week , idx) in rates?.showWeek" :key="idx" class="mb-2">
-                              <span class="inline-block weekBtn" :class="{disabled : !week.state }">{{ week.str }}</span>
-                            </li>
-                          </ul>
-                        </li>
-                      </ol>
-                    </div>
-                  </Transition>
+                  <div class="restrictions" :style="{ height: isCollapse[idx]?.height }" >
+                    <ol class="list">
+                      <li class="flex">
+                        <span class="inline-block w-50 pr-2">{{ t('start_time') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.startTime }}</span>
+                      </li>
+                      <li class="flex">
+                        <span class="inline-block w-50 pr-2">{{ t('end_time') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.endTime }}</span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.minDuration">
+                        <span class="inline-block w-50 pr-2">{{ t('min_duration') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.minDuration }}
+                          <small class="tag">/{{ t('min') }}</small>
+                        </span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.maxDuration">
+                        <span class="inline-block w-50 pr-2">{{ t('max_duration') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.maxDuration }}
+                          <small class="tag">/{{ t('min') }}</small>
+                        </span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.minCurrent">
+                        <span class="inline-block w-50 pr-2">{{ t('min_current') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.minCurrent }}
+                          <small class="tag">A</small>
+                        </span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.maxCurrent">
+                        <span class="inline-block w-50 pr-2">{{ t('max_current') }} : </span>
+                        <span class="w-50 info">{{ rates?.showRestriction?.maxCurrent }}
+                          <small class="tag">A</small>
+                        </span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.minParkingDuration">
+                        <span class="inline-block w-60 md-w-50 pr-2">{{ t('min_parking_duration') }} : </span>
+                        <span class="w-40 info">{{ rates?.showRestriction?.minParkingDuration }}
+                          <small class="tag">/{{ t('min') }}</small>
+                        </span>
+                      </li>
+                      <li class="flex" v-if="rates?.showRestriction?.maxParkingDuration">
+                        <span class="inline-block w-60 md-w-50 pr-2">{{ t('max_parking_duration') }} : </span>
+                        <span class="w-40 info">{{ rates?.showRestriction?.maxParkingDuration }}
+                          <small class="tag">/{{ t('min') }}</small>
+                        </span>
+                      </li>
+                      <li>
+                        <span class="block mb-2">{{ t('aplied_day_of_week') }} : </span>
+                        <ul class="weeksList flex flex-wrap">
+                          <li v-for="(week , idx) in rates?.showWeek" :key="idx" class="mb-2">
+                            <span class="inline-block weekBtn" :class="{disabled : !week.state }">{{ week.str }}</span>
+                          </li>
+                        </ul>
+                      </li>
+                    </ol>
+                  </div>
                 </div>
               </div>
             </div>
@@ -576,13 +621,15 @@ p {
   .close {
     position: absolute;
     right: 15px;
-    top: 15px;
-    padding: 8px 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 24px;
     border: none;
     border-radius: 8px;
-    color: var(--white);
-    font-size: 16px;
+    color: var(--secondary);
+    font-size: 22px;
     cursor: pointer;
+    background-color: transparent;
   }
 }
 .outer {
@@ -688,19 +735,21 @@ p {
     background-color: #eeeded;
   }
   .restrictions {
-    padding: 8px;
+    padding: 0px;
     border-radius: 8px;
     background-color: #e3eef7;
     overflow: hidden;
+    height: 0;
+    transition: height .4s;
   }
   .collapse {
-    width: 35px;
+    width: 50px;
     height: 35px;
     line-height: 35px;
     position: absolute;
-    right: -80px;
+    right: -100px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-48%);
     border: none;
     color: var(--secondary);
     font-size: 30px;
@@ -713,6 +762,7 @@ p {
   }
 }
 .list {
+  padding: 8px;
   > li {
     width: 100%;
     text-align: left;
@@ -795,10 +845,10 @@ p {
   height: 0px;
 }
 .fade-enter-to {
-  height: 348px;
+  height: auto;
 }
 .fade-leave-from {
-  height: 348px;
+  height: auto;
 }
 .fade-leave-to {
   height: 0px;

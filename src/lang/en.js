@@ -99,6 +99,8 @@ export default
   price : "Price",
   unit: "Unit",
   vat: "Vat",
+  excl_vat: 'excl. vat',
+  incl_vat: 'incl. vat',
   ENERGY: "Energy",
   TIME: "Time",
   PARKING_TIME: "Parking Time",
